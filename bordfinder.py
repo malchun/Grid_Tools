@@ -5,15 +5,33 @@ import sys
 import plot
 
 
-def find_border(coords, elements):
-    """Finds borders of points cloud
+def tetrahedrons_as_sets(tetr_list):
+    """Generator. Makes sets of faces for each tetra-element in list
+    
+    tetr_list - list of 4-point tethrahedrons
 
-    coords - list of points
+    return: sets of 3-point faces
+    """
+    def faces(tetr):
+        sorted_tetr = sorted(tetr)
+    
+        yield (tetr[0], tetr[1], tetr[2])
+        yield (tetr[1], tetr[2], tetr[3])
+        yield (tetr[0], tetr[2], tetr[3])
+        yield (tetr[0], tetr[1], tetr[3])
+    
+    yield from (set(faces(tetr)) for tetr in tetr_list)
+
+
+def find_border_faces(elements):
+    """Finds borders faces
+
     elements - list of elements
 
-    returns: list of border points
+    return: set of border faces
     """
-    pass
+    
+    yield from (reduce(xor, tetrahedrons_as_sets(tetr_list)))
 
 
 def write_border(filename, border):
@@ -28,6 +46,7 @@ def write_border(filename, border):
         print(len(border), file=outf)
         for coord in border:
             print(' '.join(coord), file=outf)
+    raise IOError("Can't write border to file")
 
 
 def main():
