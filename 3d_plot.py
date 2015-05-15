@@ -54,7 +54,6 @@ def main():
     filename = sys.argv[1]
     coords, elements = readfile(filename)
     plot_points(coords)
-    plot_element()
 
 
 if __name__ == "__main__":
