@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
+from functools import reduce
+from operator import xor
 
 import plot
 
@@ -24,14 +26,15 @@ def tetrahedrons_as_sets(tetr_list):
 
 
 def find_border_faces(elements):
-    """Finds borders faces
+    """Finds borders faces. This function finds
+    faces that occured only in one element.
 
     elements - list of elements
 
     return: set of border faces
     """
     
-    yield from (reduce(xor, tetrahedrons_as_sets(tetr_list)))
+    yield from (reduce(xor, tetrahedrons_as_sets(elements)))
 
 
 def write_border(filename, border):
@@ -45,7 +48,7 @@ def write_border(filename, border):
     with open(filename, "w") as outf:
         print(len(border), file=outf)
         for coord in border:
-            print(' '.join(coord), file=outf)
+            print(' '.join(border), file=outf)
     raise IOError("Can't write border to file")
 
 
@@ -53,6 +56,7 @@ def main():
     if len(sys.argv) < 2:
         raise TypeError("Not enough arguments")
     coords, elements = plot.readfile(sys.argv[1])
+    write_border("bones_border_faces.out", list(find_border_faces(elements)))
 
 
 if __name__ == "__main__":
