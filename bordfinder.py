@@ -49,7 +49,7 @@ def write_border(filename, border):
         print(len(border), file=outf)
         for coord in border:
             print(str(' '.join(str(x) for x in coord)), file=outf)
-        return()
+        return
     raise IOError("Can't write border to file")
 
 
@@ -67,7 +67,7 @@ def read_border_faces(filename):
             return [int(x) for x in borderf.readline().split(' ')]
         for _ in range(n):
             border_faces.append(get_face())
-        return(border_faces)
+        return border_faces
     raise IOError("Can't read border")
 
 
@@ -85,9 +85,10 @@ def get_border_points(border_faces, coords):
             yield set(face)
     for pointnum in reduce(xor, border_faces_as_sets()):
         border_points.append(coords[pointnum - 1])
-    return(border_points)
+    return border_points
 
 
+#TODO Get points with faces
 def main():
     if len(sys.argv) < 3:
         raise TypeError("Not enough arguments")
