@@ -20,11 +20,11 @@ def readfile(filename):
             return [int(x) for x in fn.readline().split(' ')]
         np = int(fn.readline().strip())
         coords = []
-        for i in range(np):
+        for _ in range(np):
             coords.append(getpoint())
         ne = int(fn.readline().strip())
         elements = []
-        for i in range(ne):
+        for _ in range(ne):
             elements.append(getelement())
         return coords, elements
 
