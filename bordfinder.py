@@ -49,6 +49,7 @@ def write_border(filename, border):
         print(len(border), file=outf)
         for coord in border:
             print(str(' '.join(str(x) for x in coord)), file=outf)
+        return()
     raise IOError("Can't write border to file")
 
 
@@ -83,15 +84,16 @@ def get_border_points(border_faces, coords):
         for face in border_faces:
             yield set(face)
     for pointnum in reduce(xor, border_faces_as_sets()):
-        border_points.append(coords[pointnum])
+        border_points.append(coords[pointnum - 1])
     return(border_points)
 
 
 def main():
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         raise TypeError("Not enough arguments")
-    border_faces = read_border_faces(sys.argv[1])
-    print(border_faces)
+    coords, elements = plot.readfile(sys.argv[1])
+    border_faces = read_border_faces(sys.argv[2])
+    write_border("bones_border_points.out", get_border_points(border_faces, coords))
 
 
 if __name__ == "__main__":
