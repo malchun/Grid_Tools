@@ -49,11 +49,15 @@ def plot_points(coords):
 
 
 def main():
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         raise TypeError("Not enough arguments")
     filename = sys.argv[1]
     coords, elements = readfile(filename)
     plot_points(coords)
+    filename = sys.argv[2]
+    coords, elements = readfile(filename)
+    plot_points(coords)
+
 
 
 if __name__ == "__main__":

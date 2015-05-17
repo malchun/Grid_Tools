@@ -2,7 +2,7 @@
 
 import sys
 from functools import reduce
-from operator import xor
+from operator import xor, or_
 
 import plot
 
@@ -37,7 +37,7 @@ def find_border_faces(elements):
     yield from (reduce(xor, tetrahedrons_as_sets(elements)))
 
 
-def write_border(filename, border):
+def write_border(filename, border, faces):
     """Writes border into file
 
     filename - name of file (.out)
@@ -49,6 +49,9 @@ def write_border(filename, border):
         print(len(border), file=outf)
         for coord in border:
             print(str(' '.join(str(x) for x in coord)), file=outf)
+        print(len(faces), file=outf)
+        for face in faces:
+            print(str(' '.join(str(x) for x in face)), file=outf)
         return
     raise IOError("Can't write border to file")
 
@@ -72,30 +75,39 @@ def read_border_faces(filename):
 
 
 def get_border_points(border_faces, coords):
-    """Extracts points from border faces into list
+    """Extracts points from border faces into list and
+    translates border_faces to new numbers
 
     border_faces - list of faces
     coords - list of points
 
-    return: list of points
+    return: list of points, list of faces
     """
     border_points = []
+    points_number_dict = {}
+    
     def border_faces_as_sets():
         for face in border_faces:
             yield set(face)
-    for pointnum in reduce(xor, border_faces_as_sets()):
+    
+    for pointnum in reduce(or_, border_faces_as_sets()):
         border_points.append(coords[pointnum - 1])
-    return border_points
+        points_number_dict[pointnum] = len(border_points) - 1
+    
+    def translate_face(face):
+        return [points_number_dict[x] for x in face]
+    
+    border_faces_translated = [translate_face(x) for x in border_faces]
+    return border_points, border_faces_translated
 
 
-#TODO Get points with faces
 def main():
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         raise TypeError("Not enough arguments")
     coords, elements = plot.readfile(sys.argv[1])
-    border_faces = read_border_faces(sys.argv[2])
-    write_border("bones_border_points.out", get_border_points(border_faces, coords))
-
+    border_faces = find_border_faces(elements)
+#    border_points, border_faces_translated = get_border_points(border_faces, coords)
+    write_border("fat_border.out", *get_border_points(border_faces, coords))
 
 if __name__ == "__main__":
     main()
