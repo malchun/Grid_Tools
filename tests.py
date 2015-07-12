@@ -5,22 +5,28 @@ import bordfinder
 
 
 class TestBorderFaces(unittest.TestCase):
-    points = [(0.0, 0.0, 0.0),
+    test_figures = ['cube', 'tetrahedron']
+    points = {'cube': [(0.0, 0.0, 0.0),
         (1.0, 0.0, 0.0),
         (1.0, 1.0, 0.0),
         (0.0, 1.0, 0.0),
         (0.0, 0.0, 1.0),
         (1.0, 0.0, 1.0),
         (1.0, 1.0, 1.0),
-        (0.0, 1.0, 1.0)
-    ]
-    elements = [[0, 1, 2, 5],
-        [0, 2, 3, 7],
-        [0, 4, 5, 7],
-        [2, 5, 6, 7],
-        [0, 2, 5, 7]
-    ]
-    faces = [(0, 4, 7),
+        (0.0, 1.0, 1.0)],
+        'tetrahedron': [(0.0, 0.0, 0.0),
+        (1.0, 0.0, 0.0),
+        (0.0, 1.0, 0.0),
+        (0.0, 0.0, 1.0)]
+    }
+    elements = {'cube': [(0, 1, 2, 5),
+        (0, 2, 3, 7),
+        (0, 4, 5, 7),
+        (2, 5, 6, 7),
+        (0, 2, 5, 7)],
+        'tetrahedron': [(0, 1, 2, 3)]
+    }
+    border_faces = {'cube': [(0, 4, 7),
         (0, 3, 7),
         (0, 4, 5),
         (0, 1, 5),
@@ -31,14 +37,18 @@ class TestBorderFaces(unittest.TestCase):
         (1, 2, 5),
         (2, 5, 6),
         (5, 6, 7),
-        (4, 5, 7)
-    ]
+        (4, 5, 7)],
+        'tetrahedron': [(0, 1, 2),
+        (0, 1, 3),
+        (0, 2, 3),
+        (1, 2, 3)]
+    }
 
-    def test_to_border_faces(self): 
-#    """Testing border faces finder"""
-        result = set(bordfinder.find_border_faces(self.elements))
-        print(result)
-        self.assertEqual(set(self.faces), result)
+    def test_find_border_faces(self): 
+        """Testing border faces finder"""
+        for name in self.test_figures:
+            result = set(bordfinder.find_border_faces(self.elements[name]))
+            self.assertEqual(set(self.border_faces[name]), result)
 
 
 if __name__ == "__main__":
