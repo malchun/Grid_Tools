@@ -1,0 +1,4 @@
+1) Detect collisions
+2) Generae meshes
+3) Read some params of meshes
+4) Visualisation funvtionality
